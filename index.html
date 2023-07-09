@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Stopwatch App</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <style>
+    .container {
+      margin-top: 50px;
+    }
+    .time {
+      font-size: 40px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .btn-group {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="text-center">Stopwatch</h1>
+    <div class="time">00:00:00</div>
+    <div class="btn-group d-flex justify-content-center">
+      <button id="startBtn" class="btn btn-primary mr-2">Start</button>
+      <button id="stopBtn" class="btn btn-danger" disabled>Stop</button>
+      <button id="resetBtn" class="btn btn-secondary ml-2">Reset</button>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
+
+<script>
+
+    // DOM elements
+const timeDisplay = document.querySelector('.time');
+const startBtn = document.getElementById('startBtn');
+const stopBtn = document.getElementById('stopBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+// Stopwatch variables
+let startTime, elapsedTime = 0, interval;
+
+// Format time as HH:MM:SS
+function formatTime(milliseconds) {
+  const seconds = Math.floor(milliseconds / 1000) % 60;
+  const minutes = Math.floor(milliseconds / 1000 / 60) % 60;
+  const hours = Math.floor(milliseconds / 1000 / 60 / 60);
+  return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+}
+
+// Add leading zero for single digit numbers
+function pad(number) {
+  return number.toString().padStart(2, '0');
+}
+
+// Update the time display
+function updateTime() {
+  const elapsedTime = Date.now() - startTime;
+  timeDisplay.textContent = formatTime(elapsedTime);
+}
+
+// Start the stopwatch
+function startStopwatch() {
+  startTime = Date.now() - elapsedTime;
+  interval = setInterval(updateTime, 1000);
+  startBtn.disabled = true;
+  stopBtn.disabled = false;
+}
+
+// Stop the stopwatch
+function stopStopwatch() {
+  clearInterval(interval);
+  elapsedTime = Date.now() - startTime;
+  startBtn.disabled = false;
+  stopBtn.disabled = true;
+}
+
+// Reset the stopwatch
+function resetStopwatch() {
+  clearInterval(interval);
+  elapsedTime = 0;
+  timeDisplay.textContent = formatTime(elapsedTime);
+  startBtn.disabled = false;
+  stopBtn.disabled = true;
+}
+
+// Event listeners
+startBtn.addEventListener('click', startStopwatch);
+stopBtn.addEventListener('click', stopStopwatch);
+resetBtn.addEventListener('click', resetStopwatch);
+
+</script>
